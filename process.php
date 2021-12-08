@@ -3,56 +3,66 @@ require_once('config/config.php');
 
 $register_or_login = strip_tags($_POST['submit-type']);
 
+
+
 login_or_register_referral();
 
 function login_or_register_referral()
 {
     global $register_or_login;
     var_dump($register_or_login);
+    echo ("<br>");
     if ($register_or_login == "Register!") {
         da_register_process_controller();
     } else if ($register_or_login == "Login!") {
-        da_login_process_controller();
+        // da_login_process_controller();
     } else {
         echo ("Can't tell if register or login");
         return;
     }
 }
 
-$name = strip_tags($_POST['name']);
-$mail = strip_tags($_POST['email']);
-$password = strip_tags($_POST['password']);
-$password_repeated = strip_tags($_POST['password-repeat']);
-$user_age = strip_tags($_POST['age']);
-
-
 function da_register_process_controller()
 {
-    first_variables_cleanup(1);
+    $name = strip_tags($_POST['name']);
+    $mail = strip_tags($_POST['email']);
+    $password = strip_tags($_POST['password']);
+    $password_repeated = strip_tags($_POST['password-repeat']);
+    $user_age = strip_tags($_POST['age']);
+
+    $name = normal_chars($name);
+    $mail = normal_chars($mail);
+    $password = normal_chars($password);
+    $password_repeated = normal_chars($password_repeated);
+    $user_age = normal_chars($user_age);
+
+
 
     echo ("register process controller <br>");
 
-    if (variables_presence_verification()) {
-        echo ("a");
+    // first_variables_cleanup(1);
+
+    if (variables_presence_verification($name, $mail, $password, $password_repeated, $user_age)) {
+        echo ("a<br>");
         // return;
-    } else if (variables_content_verification()) {
-        echo ("a1");
+    } else if (variables_content_verification($mail, $name, $password, $password_repeated, $user_age)) {
+        echo ("a1<br>");
         // return;
-    } else if (mail_validity_ver()) {
-        echo ("b");
+    } else if (mail_validity_ver($mail)) {
+        echo ("b<br>");
         return;
-    } else if (mdp_input_compare()) {
-        echo ("c");
+    } else if (mdp_input_compare($password, $password_repeated)) {
+        echo ("c<br>");
         return;
     } else if (check_and_insert()) {
-        echo ("d");
+        echo ("d<br>");
         return;
     } else if (set_da_session_things_after_login()) {
-        echo ("e");
+        echo ("e<br>");
         return;
     }
 
-    echo ("z");
+    echo ("z<br>");
     set_da_session_things_after_login();
     redirect_welcome_page_results();
 
@@ -70,26 +80,26 @@ function da_register_process_controller()
     echo ("<br> fin");
 }
 
-function da_login_process_controller()
-{
-    first_variables_cleanup(0);
+// function da_login_process_controller()
+// {
+//     // first_variables_cleanup(0);
 
-    echo ("login process controller <br>");
+//     echo ("login process controller <br>");
 
-    if (variables_presence_verification()) {
-        echo ("a");
-        return;
-    } else if (variables_content_verification()) {
-        echo ("a1");
-        return;
-    } else if (mail_validity_ver()) {
-        echo ("b");
-        return;
-    } else if (mdp_input_compare()) {
-        echo ("c");
-        return;
-    }
-}
+//     if (variables_presence_verification($name, $mail, $password, $password_repeated, $user_age)) {
+//         echo ("a");
+//         return;
+//     } else if (variables_content_verification()) {
+//         echo ("a1");
+//         return;
+//     } else if (mail_validity_ver()) {
+//         echo ("b");
+//         return;
+//     } else if (mdp_input_compare()) {
+//         echo ("c");
+//         return;
+//     }
+// }
 
 function normal_chars($string)
 {
@@ -101,71 +111,55 @@ function normal_chars($string)
     return trim($string, ' -');
 }
 
-function first_variables_cleanup($boolean)
+// function first_variables_cleanup($boolean)
+// {
+//     $rgster = $boolean;
+//     // 1 = register / 0 = login
+//     if ($rgster) {
+//         echo ("register test cleanup");
+//         $name = strip_tags($_POST['name']);
+//         $mail = strip_tags($_POST['email']);
+//         $password = strip_tags($_POST['password']);
+//         $password_repeated = strip_tags($_POST['password-repeat']);
+//         $user_age = strip_tags($_POST['age']);
+
+//         $name = normal_chars($name);
+//         $mail = normal_chars($mail);
+//         $password = normal_chars($password);
+//         $password_repeated = normal_chars($password_repeated);
+//         $user_age = normal_chars($user_age);
+
+//         echo  nl2br(" \n");
+//         echo  nl2br(" \n");
+//         echo "name : $name";
+//         echo  nl2br(" \n");
+//         echo "mail : $mail";
+//         echo nl2br(" \n");
+//         echo "password : $password";
+//         echo  nl2br(" \n");
+//         echo "age : $user_age";
+//         echo  nl2br(" \n");
+//         echo "password repeat : $password_repeated";
+//         echo  nl2br(" \n");
+//         echo  nl2br(" \n");
+//     } else {
+//         echo nl2br(" \n");
+//         echo ("lapin");
+//     }
+// }
+
+
+
+function variables_presence_verification($name, $mail, $password, $password_repeated, $user_age)
 {
-    $rgster = $boolean;
-    // 1 = register / 0 = login
-    if ($rgster) {
-        $name = strip_tags($_POST['name']);
-        $mail = strip_tags($_POST['email']);
-        $password = strip_tags($_POST['password']);
-        $password_repeated = strip_tags($_POST['password-repeat']);
-        $user_age = strip_tags($_POST['age']);
-
-        $name = normal_chars($name);
-        $mail = normal_chars($mail);
-        $password = normal_chars($password);
-        $password_repeated = normal_chars($password_repeated);
-        $user_age = normal_chars($user_age);
-
-        echo  nl2br(" \n");
-        echo  nl2br(" \n");
-        echo "mail : $mail";
-        echo nl2br(" \n");
-        echo "name : $name";
-        echo  nl2br(" \n");
-        echo "password : $password";
-        echo  nl2br(" \n");
-        echo "age : $user_age";
-        echo  nl2br(" \n");
-        echo "password repeat : $password_repeated";
-        echo  nl2br(" \n");
-        echo  nl2br(" \n");
-    } else {
-        echo nl2br(" \n");
-    }
-}
-
-
-
-function variables_presence_verification()
-{
-    // Verification de la variable
-    global $name;
-    global $mail;
-    global $password;
-    global $password_repeated;
-    global $user_age;
-
-    var_dump($name);
-    var_dump($mail);
-    var_dump($password);
-    var_dump($password_repeated);
-    var_dump($user_age);
-
-    if ((!isset($mail)) || (!isset($name)) || (!isset($password))  || (!isset($password_repeated)) || (!isset($user_age))) {
-        echo ('Il vous faut un mail, name, mdp et une verification correcte pour vous inscrire. Bouuh. Sale nul.');
+    if ((!isset($name)) || (!isset($mail)) || (!isset($password))  || (!isset($password_repeated)) || (!isset($user_age))) {
+        echo ('Il vous faut un name, mail, mdp et une verification correcte pour vous inscrire. Bouuh. Sale nul. <br>');
         return 1;
     }
 }
 
-function variables_content_verification()
+function variables_content_verification($mail, $name, $password, $password_repeated, $user_age)
 {
-    global $name;
-    global $mail;
-    global $password;
-    global $password_repeated;
-    global $user_age;
 
     if (empty($mail) || empty($name) || empty($password) || empty($password_repeated) || empty($user_age)) {
         echo ("Une variable importante vaut soit 0, vide, ou pas définie du tout");
@@ -176,9 +170,8 @@ function variables_content_verification()
 
 
 // Verifier validité du mail
-function mail_validity_ver()
+function mail_validity_ver($mail)
 {
-    global $mail;
     if (filter_var($mail, FILTER_VALIDATE_EMAIL)) {
         echo ("$mail is a valid email address");
         echo  nl2br(" \n");
@@ -193,10 +186,8 @@ function mail_validity_ver()
 
 
 
-
-
 // Compare les MDP
-function mdp_input_compare()
+function mdp_input_compare($password, $password_repeated)
 {
     global $password;
     global $password_repeated;
@@ -311,22 +302,13 @@ function set_da_session_things_after_login()
     global $name;
     global $mail;
     global $user_age;
-    global $dtbs;
 
-    $search_request = 'SELECT * FROM `tp_users` WHERE name = :name';
-    $prepare__search = $dtbs->prepare($search_request);
-    $prepare__search->execute(["name" => $name]); // run the statement
-    $resultat_array = $prepare__search->fetchAll(PDO::FETCH_ASSOC); // fetch the rows and put into associative array
-
-    $le_name = $resultat_array[0]['name'];
-    $le_id = $resultat_array[0]['id'];
-
-    $_SESSION['id'] = $le_id;
     $_SESSION['mail'] = $mail;
     $_SESSION['pseudo'] = $name;
     $_SESSION['logged_in'] = true;
     $_SESSION["age"] = $user_age;
 
+    echo ("setting session variables <br>");
     var_dump($_SESSION["logged_in"]);
     echo ("<br />");
     var_dump($_SESSION["pseudo"]);

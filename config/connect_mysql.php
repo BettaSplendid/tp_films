@@ -22,6 +22,6 @@ try {
     var_dump($message);
     die("Erreur lors de ma connexion PDO");
 }
-echo "Connected successfully with variables method";
+echo "<br>Connected successfully with variables method<br>";
 
 
