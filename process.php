@@ -57,8 +57,6 @@ function da_register_process_controller($dtbs)
 
     echo ("register process controller <br>");
 
-    $_SESSION["id"] = get_user_id($mail, $dtbs);
-
     if (variables_presence_verification($user_data_array)) {
         echo ("a<br>");
         return;
@@ -71,18 +69,20 @@ function da_register_process_controller($dtbs)
     } else if (mdp_input_compare($user_data_array["user_data_password"], $user_data_array["user_data_password_repeated"])) {
         echo ("c<br>");
         return;
-    } else if (check_and_insert($user_data_array, $dtbs)) {
+    }
 
+    // $_SESSION["id"] = get_user_id($mail, $dtbs);
+
+    if (check_and_insert($user_data_array, $dtbs)) {
         echo ("d<br>");
         return;
-    } else if (set_da_session_things_after_register($mail, $name, $user_age, $_SESSION["id"])) {
+    } else if (set_da_session_things_after_register($user_data_array, $_SESSION["id"])) {
         echo ("e<br>");
         return;
     }
 
+
     echo ("z<br>");
-
-
     echo ("<br>");
     echo ("Sessions info");
     echo ("<br>");
@@ -193,20 +193,21 @@ function normal_chars($string)
 
 function variables_presence_verification($user_data_array)
 {
-    if ((!isset($name)) || (!isset($mail)) || (!isset($password))  || (!isset($password_repeated)) || (!isset($user_age))) {
+    if ((!isset($user_data_array['user_data_name'])) || (!isset($user_data_array['user_data_mail'])) || (!isset($user_data_array['user_data_password']))  || (!isset($user_data_array['user_data_password_repeated'])) || (!isset($user_data_array['user_data_user_age']))) {
         echo ('Il vous faut un name, mail, mdp et une verification correcte pour vous inscrire. Bouuh. Sale nul. <br>');
         return 1;
     }
+    echo ("les variables sont presentes <br>");
 }
 
 function variables_content_verification($user_data_array)
 {
 
-    if (empty($name) || empty($mail) || empty($password) || empty($password_repeated) || empty($user_age)) {
-        echo ("Une variable importante vaut soit 0, vide, ou pas définie du tout");
-        echo  nl2br(" \n");
+    if (empty($user_data_array['user_data_name']) || empty($user_data_array['user_data_mail']) || empty($user_data_array['user_data_password']) || empty($user_data_array['user_data_password_repeated']) || empty($user_data_array['user_data_user_age'])) {
+        echo ("Une variable importante vaut soit 0, vide, ou pas définie du tout <br>");
         return 1;
     }
+    echo ("les variables sont remplies <br>");
 }
 
 
@@ -214,13 +215,10 @@ function variables_content_verification($user_data_array)
 function mail_validity_ver($mail)
 {
     if (filter_var($mail, FILTER_VALIDATE_EMAIL)) {
-        echo ("$mail is a valid email address");
-        echo  nl2br(" \n");
-        echo  nl2br(" \n");
+        echo ("$mail is a valid email address <br>");
         return 0;
     } else {
-        echo ("$mail is not a valid email address");
-        echo  nl2br(" \n");
+        echo ("$mail is not a valid email address <br>");
         return 1;
     }
 }
@@ -231,12 +229,10 @@ function mail_validity_ver($mail)
 function mdp_input_compare($password, $password_repeated)
 {
     if (strcmp($password, $password_repeated) !== 0) {
-        echo "Vos mots de passe ne sont pas identiques. Veuillez les verifier.";
-        echo  nl2br(" \n");
+        echo "Vos mots de passe ne sont pas identiques. Veuillez les verifier. <br>";
         return 1;
     } else {
-        echo "Mdp identiques. Bien.";
-        echo  nl2br(" \n");
+        echo "Mdp identiques. Bien.<br>";
         return 0;
     }
 }
@@ -318,15 +314,15 @@ function search_db_mail($mail, $dtbs)
 function check_and_insert($user_data_array, $dtbs)
 {
     echo "Search da db <br />";
-    if (search_db_name($user_data_array["name"], $dtbs)) {
+    if (search_db_name($user_data_array["user_data_name"], $dtbs)) {
         echo "Found duplicate xdata, no insertion<br />";
         return 1;
-    } elseif (search_db_mail($user_data_array["mail"], $dtbs)) {
+    } elseif (search_db_mail($user_data_array["user_data_mail"], $dtbs)) {
         echo "Found duplicate data, no insertion<br />";
         return 1;
     } else {
         echo "Attempting to insert da data <br />";
-        ze_inserto($user_data_array["name"], $user_data_array["mail"], $user_data_array["password"], $user_data_array["age"], $dtbs);
+        ze_inserto($user_data_array["user_data_name"], $user_data_array["user_data_mail"], $user_data_array["user_data_password"], $user_data_array["user_data_user_age"], $dtbs);
         return 0;
     }
 }
@@ -344,12 +340,12 @@ function get_user_id($mail, $dtbs)
     return $da_result;
 }
 
-function set_da_session_things_after_register($mail, $name, $user_age, $user_id)
+function set_da_session_things_after_register($user_data_array, $user_id)
 {
-    $_SESSION['mail'] = $mail;
-    $_SESSION['pseudo'] = $name;
     $_SESSION['logged_in'] = true;
-    $_SESSION['age'] = $user_age;
+    $_SESSION['mail'] = $user_data_array["mail"];
+    $_SESSION['pseudo'] = $user_data_array["name"];
+    $_SESSION['age'] = $user_data_array["user_age"];
     $_SESSION['id'] = $user_id;
 
     echo ("setting session variables <br>");
