@@ -86,16 +86,19 @@ function da_register_process_controller($dtbs)
     echo ("<br>");
     echo ("Sessions info");
     echo ("<br>");
-    var_dump($_SESSION["logged_in"]);
+
     echo ("session logged_in : <br />");
-    var_dump($_SESSION["pseudo"]);
+    var_dump($_SESSION["logged_in"]);
+
     echo ("session pseudo : <br />");
-    var_dump($_SESSION["mail"]);
+    var_dump($_SESSION["pseudo"]);
     echo ("session mail : <br />");
-    var_dump($_SESSION["id"]);
+    var_dump($_SESSION["mail"]);
     echo ("session id : <br> age");
+    var_dump($_SESSION["id"]);
+    echo ("session age : <br>");
     var_dump($_SESSION["age"]);
-    echo ("session age : <br> fin");
+    echo ("fin <br>");
 
     redirect_welcome_page_results();
 }
@@ -131,7 +134,7 @@ function da_login_process_controller($dtbs)
         return;
     }
 
-    // set_da_session_things_after_login();
+    set_da_session_things_after_login($mail, $password, $dtbs);
 }
 
 function checkvariables($mail, $password)
@@ -162,12 +165,9 @@ function check_db_login($mail, $password, $dtbs)
     $prepare__search->execute(["mail" => $mail]); // run the statement
     $resultat_array = $prepare__search->fetchAll(PDO::FETCH_ASSOC); // fetch the rows and put into associative array
 
-    echo ("<br>var dump <br>");
-    var_dump($resultat_array);
+    var_dump($mail);
 
-    echo ("<br>var dump <br>");
-    var_dump($resultat_array[0]['password']);
-    $le_resultat = $resultat_array[0]['password'];
+    $le_resultat = $resultat_array[0]["password"];
 
     if ($le_resultat == $password) {
         echo ("Found matching password <br>");
@@ -177,6 +177,21 @@ function check_db_login($mail, $password, $dtbs)
     // Not supposed to happen but just in case
     echo "Error, test failed. <br />";
     return 1;
+}
+
+function set_da_session_things_after_login($mail, $password, $dtbs)
+{
+    $search_request = 'SELECT * FROM `tp_users` WHERE email = :mail';
+    $prepare__search = $dtbs->prepare($search_request);
+    $prepare__search->execute(["mail" => $mail]); // run the statement
+    $resultat_array = $prepare__search->fetchAll(PDO::FETCH_ASSOC); // fetch the rows and put into associative array
+
+    $_SESSION['logged_in'] = true;
+    $_SESSION['mail'] = $mail;
+    $_SESSION['pseudo'] = $password;
+    $_SESSION['age'] = $resultat_array[0]["age"];
+    $_SESSION['id'] = $resultat_array[0]["id"];
+    $_SESSION['pseudo'] = $resultat_array[0]["adult"];
 }
 
 
@@ -343,9 +358,9 @@ function get_user_id($mail, $dtbs)
 function set_da_session_things_after_register($user_data_array, $user_id)
 {
     $_SESSION['logged_in'] = true;
-    $_SESSION['mail'] = $user_data_array["mail"];
-    $_SESSION['pseudo'] = $user_data_array["name"];
-    $_SESSION['age'] = $user_data_array["user_age"];
+    $_SESSION['mail'] = $user_data_array["user_data_mail"];
+    $_SESSION['pseudo'] = $user_data_array["user_data_name"];
+    $_SESSION['age'] = $user_data_array["user_data_user_age"];
     $_SESSION['id'] = $user_id;
 
     echo ("setting session variables <br>");
