@@ -79,9 +79,6 @@ var_dump($_SESSION['logged_in']);
 
                 <form action="process.php" method="POST" class="form-login">
                     <div>
-                        <input type="text" name="name" id="name" placeholder="Your name *">
-                    </div>
-                    <div>
                         <input type="email" name="email" id="email" placeholder="Your email *">
                     </div>
                     <div>
