@@ -102,3 +102,34 @@
     margin-top: 10px;
     margin-bottom: 20px;
 }
+
+.the_cool_movies {
+    background-color: #038857;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px;
+    text-align: center;
+}
+
+.our_li_container_comrade {
+    display: flex;
+    flex-direction: column;
+    background-color: brown;
+    align-items: center;
+    padding: 5px;
+    border-radius: 10px;
+    border-width: 5px;
+    border-color: yellow;
+    border-style: solid;
+}
+
+.le_actual_li_content {
+    padding: 10vh;
+    border-radius: 5px;
+    background-color: purple;
+    margin-bottom: 1vh;
+}
+
+.le_poster_image {
+    width: 250px;
+}

@@ -8,12 +8,23 @@ var_dump($_SESSION["pseudo"]);
 var_dump($_SESSION["mail"]);
 var_dump($_SESSION["id"]);
 var_dump($_SESSION["age"]);
+var_dump($_SESSION["adult"]);
 
-if($_SESSION["logged_in"] == true)
-    echo("Logged in");
+
+$pass_session_mail = $_SESSION["mail"];
+$pass_session_pseudo = $_SESSION["pseudo"];
+$pass_session_logged = $_SESSION["logged_in"];
+$pass_session_id = $_SESSION["id"];
+$pass_session_age = $_SESSION["age"];
+$pass_session_adult = $_SESSION["adult"];
+
+
+if ($_SESSION["logged_in"] == true)
+    echo ("Logged in");
 else
-    echo("Not logged in");
+    echo ("Not logged in");
 ?>
+
 
 
 <!DOCTYPE html>
@@ -22,16 +33,17 @@ else
 <head>
     <meta charset="utf-8">
     <title>Parrot Movies Assistant</title>
-    <meta name="description" content="Description importantes">
-    </meta>
     <meta property="og:image" content="https://thumbs.dreamstime.com/z/parrot-sits-branch-bright-silhouette-drawn-various-lines-style-minimalism-tattoo-bird-logo-parrot-sits-174762319.jpg">
     <meta property="og:title" content="Parrot Homework Network">
 
-    <link rel="shortcut icon" href="assets/better parrot.png" type="image/x-icon">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="icon" href="assets/better_parrot.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="assets/better_parrot.ico" type="image/x-icon">
     <link rel="stylesheet" href="assets/le_css.css">
 </head>
 
 <body>
+
     <div class="superheader"></div>
     <div class="header_bar">
         <img class="header_logo" src='assets/sharpparrot.png'>
@@ -44,10 +56,24 @@ else
         <a class="active" href="index.php">Accueil</a>
     </div>
     <div class="super_container">
+        <!-- SHHHHH -->
+        <div class="special_secret_div">
+            <input type="text" name="name" id="pass_session_mail" style="display: none;" value=<?= $pass_session_mail ?>>
+            <input type="text" name="name" id="pass_session_pseudo" style="display: none;" value=<?= $pass_session_pseudo ?>>
+            <input type="text" name="name" id="pass_session_logged" style="display: none;" value=<?= $pass_session_logged ?>>
+            <input type="text" name="name" id="pass_session_id" style="display: none;" value=<?= $pass_session_id ?>>
+            <input type="text" name="name" id="pass_session_age" style="display: none;" value=<?= $pass_session_age ?>>
+            <input type="text" name="name" id="pass_session_adult" style="display: none;" value=<?= $pass_session_adult ?>>
+        </div>
+        <section class="the_cool_movies">
+            <ul id="the_cool_movies_ul">
 
-
-
+            </ul>
+            
+        </section>
     </div>
 </body>
+<script type="text/javascript" src="GetPopularMovies.js">
+</script>
 
 </html>
