@@ -134,65 +134,10 @@ function da_login_process_controller($dtbs)
         return;
     }
 
-    set_da_session_things_after_login($mail, $password, $dtbs);
+    set_da_session_things_after_login($mail, $dtbs);
+    redirect_welcome_page_results();
 }
 
-function checkvariables($mail, $password)
-{
-    if (!isset($mail) || !isset($password)) {
-        echo ('Il vous faut un name, mail, mdp et une verification correcte pour vous inscrire. Bouuh. Sale nul. <br>');
-        return 1;
-    }
-    echo ("variables definies <br>");
-    return 0;
-}
-
-function check_variables_content($mail, $password)
-{
-    if (empty($mail) || empty($password)) {
-        echo ("Une variable importante vaut soit 0, vide, ou pas définie du tout <br>");
-        echo  nl2br(" \n");
-        return 1;
-    }
-    echo ("variables remplies <br>");
-    return 0;
-}
-
-function check_db_login($mail, $password, $dtbs)
-{
-    $search_request = 'SELECT * FROM `tp_users` WHERE email = :mail';
-    $prepare__search = $dtbs->prepare($search_request);
-    $prepare__search->execute(["mail" => $mail]); // run the statement
-    $resultat_array = $prepare__search->fetchAll(PDO::FETCH_ASSOC); // fetch the rows and put into associative array
-
-    var_dump($mail);
-
-    $le_resultat = $resultat_array[0]["password"];
-
-    if ($le_resultat == $password) {
-        echo ("Found matching password <br>");
-        return 0;
-    }
-
-    // Not supposed to happen but just in case
-    echo "Error, test failed. <br />";
-    return 1;
-}
-
-function set_da_session_things_after_login($mail, $password, $dtbs)
-{
-    $search_request = 'SELECT * FROM `tp_users` WHERE email = :mail';
-    $prepare__search = $dtbs->prepare($search_request);
-    $prepare__search->execute(["mail" => $mail]); // run the statement
-    $resultat_array = $prepare__search->fetchAll(PDO::FETCH_ASSOC); // fetch the rows and put into associative array
-
-    $_SESSION['logged_in'] = true;
-    $_SESSION['mail'] = $mail;
-    $_SESSION['pseudo'] = $password;
-    $_SESSION['age'] = $resultat_array[0]["age"];
-    $_SESSION['id'] = $resultat_array[0]["id"];
-    $_SESSION['pseudo'] = $resultat_array[0]["adult"];
-}
 
 
 function normal_chars($string)
@@ -237,6 +182,89 @@ function mail_validity_ver($mail)
         return 1;
     }
 }
+
+
+function checkvariables($mail, $password)
+{
+    if (!isset($mail) || !isset($password)) {
+        echo ('Il vous faut un name, mail, mdp et une verification correcte pour vous inscrire. Bouuh. Sale nul. <br>');
+        return 1;
+    }
+    echo ("variables definies <br>");
+    return 0;
+}
+
+function check_variables_content($mail, $password)
+{
+    if (empty($mail) || empty($password)) {
+        echo ("Une variable importante vaut soit 0, vide, ou pas définie du tout <br>");
+        echo  nl2br(" \n");
+        return 1;
+    }
+    echo ("variables remplies <br>");
+    return 0;
+}
+
+function check_db_login($mail, $password, $dtbs)
+{
+    $search_request = 'SELECT * FROM `tp_users` WHERE email = :mail';
+    $prepare__search = $dtbs->prepare($search_request);
+    $prepare__search->execute(["mail" => $mail]); // run the statement
+    $resultat_array = $prepare__search->fetchAll(PDO::FETCH_ASSOC); // fetch the rows and put into associative array
+
+    var_dump($resultat_array);
+
+    if (empty($resultat_array)) {
+        echo ("<br>no matching account <br>");
+        return 1;
+    }
+    echo ("<br>matching account <br>");
+    $le_resultat = $resultat_array[0]["password"];
+
+    if ($le_resultat == $password) {
+        echo ("<br>Found matching password <br>");
+        return 0;
+    }
+
+    // Not supposed to happen but just in case
+    echo "<br>Error during database handshake. test failed. <br>";
+    return 1;
+}
+
+function set_da_session_things_after_login($mail, $dtbs)
+{
+
+    echo ("<br> Setting session variables login");
+
+    var_dump($dtbs);
+
+    $search_request = 'SELECT * FROM `tp_users` WHERE email = :mail';
+    $prepare__search = $dtbs->prepare($search_request);
+    $prepare__search->execute(["mail" => $mail]); // run the statement
+    $resultat_array = $prepare__search->fetchAll(PDO::FETCH_ASSOC); // fetch the rows and put into associative array
+
+    $_SESSION['logged_in'] = true;
+    $_SESSION['mail'] = $mail;
+    $_SESSION['pseudo'] = $resultat_array[0]["name"];;
+    $_SESSION['age'] = $resultat_array[0]["age"];
+    $_SESSION['id'] = $resultat_array[0]["id"];
+    $_SESSION['adult'] = $resultat_array[0]["adult"];
+
+    echo ("<br> session logged_in : <br />");
+    var_dump($_SESSION["logged_in"]);
+    echo ("<br> session pseudo : <br />");
+    var_dump($_SESSION["pseudo"]);
+    echo ("<br> session mail : <br />");
+    var_dump($_SESSION["mail"]);
+    echo ("<br> session id : <br> age");
+    var_dump($_SESSION["id"]);
+    echo ("<br> session age : <br>");
+    var_dump($_SESSION["age"]);
+    echo ("<br> session adult : <br>");
+    var_dump($_SESSION["adult"]);
+    echo ("<br> fin <br>");
+}
+
 
 
 
@@ -381,11 +409,11 @@ function redirect_welcome_page_results()
     // If logged in, to index
     // If failed to login, back to accounts
     if (isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] === true) {
-        // header("location: index.php");
+        header("location: index.php");
         echo ("<br>You are going to index.php<br>");
         exit;
     } else {
-        // header("location: accounts.php");
+        header("location: accounts.php");
         echo ("<br>You are going to accounts.php<br>");
         exit;
     }
