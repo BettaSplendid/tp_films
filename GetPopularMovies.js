@@ -39,7 +39,7 @@ $(document).ready(function() {
     let apiKey = '22f118d1998ea34386d70fba4d592724'
 
     $.ajax({
-        url: endpoint + "?key=" + apiKey + " &q=" + $(this).text(),
+        url: endpoint + "?key=" + apiKey + $(this).text(),
         contentType: "application/json",
         dataType: 'json',
         success: function(result) {
@@ -74,7 +74,7 @@ function put_teh_movies_out_there(result) {
 
         actual.className = "le_actual_li_content"
 
-        le_img.src = 'https://image.tmdb.org/t/p/original/wwemzKWzjKYJFfCeiB57q3r4Bcm.png'
+        le_img.src = 'https://image.tmdb.org/t/p/w500' + les_resultats[index].poster_path;
         le_img.className = "le_poster_image";
 
         actual.appendChild(textnode);
@@ -84,9 +84,6 @@ function put_teh_movies_out_there(result) {
 
     }
 }
-
-
-
 
 
 
