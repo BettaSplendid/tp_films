@@ -53,7 +53,7 @@ else
         <a href="accounts.php">Comptes</a>
         <a href="https://cultofthepartyparrot.com/">News</a>
         <a href="categories.php">Categories</a>
-        <a href="popular.php">Popular</a>
+        <a href="popular.php">popular</a>
         <a class="active" href="index.php">Accueil</a>
     </div>
     <div class="super_container">
@@ -66,26 +66,15 @@ else
             <input type="text" name="name" id="pass_session_age" style="display: none;" value=<?= $pass_session_age ?>>
             <input type="text" name="name" id="pass_session_adult" style="display: none;" value=<?= $pass_session_adult ?>>
         </div>
+        <div class="the_cool_movies">
+            A la une : 
+            <ul id="the_cool_movies_ul">
 
-    </div>
-</body>
-<footer>
-    <div class="the_footerman">
-        <div class="the_footerman_text">
-            Plus de liens :
-            <a href="https://cultofthepartyparrot.com/">Secret!</a>
+            </ul>
+            
         </div>
     </div>
-    <div class="the_foot_of_the_footerman">
-        @Mr Con Ure. 
-        @themoviedb.
-    </div>
-    <script src="monscript.js"></script>
-    <script>
-        var article_id = <?php print($_SESSION['loggedin']) ?>
-    </script>
-</footer>
-
+</body>
 <script type="text/javascript" src="GetPopularMovies.js">
 </script>
 

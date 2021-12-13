@@ -56,13 +56,7 @@ function log_le_output(result) {
 
 function put_teh_movies_out_there(result) {
     console.log("putting movies in")
-        // document.getElementsByClassName("the_cool_movies")[0].innerHTML = result.results[0].id
-
-    // target = document.getElementsByClassName("the_cool_movies")[0]
     les_resultats = result.results;
-
-    console.log(les_resultats)
-    console.log(les_resultats.length)
 
     for (let index = 0; index < les_resultats.length; index++) {
         var node = document.createElement("li");

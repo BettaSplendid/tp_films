@@ -19,10 +19,13 @@ $pass_session_age = $_SESSION["age"];
 $pass_session_adult = $_SESSION["adult"];
 
 
+$category_to_display = strip_tags($_GET['with_genres']);
+
 if ($_SESSION["logged_in"] == true)
     echo ("Logged in");
 else
     echo ("Not logged in");
+
 ?>
 
 
@@ -53,7 +56,7 @@ else
         <a href="accounts.php">Comptes</a>
         <a href="https://cultofthepartyparrot.com/">News</a>
         <a href="categories.php">Categories</a>
-        <a href="popular.php">Popular</a>
+        <a href="popular.php">popular</a>
         <a class="active" href="index.php">Accueil</a>
     </div>
     <div class="super_container">
@@ -65,28 +68,19 @@ else
             <input type="text" name="name" id="pass_session_id" style="display: none;" value=<?= $pass_session_id ?>>
             <input type="text" name="name" id="pass_session_age" style="display: none;" value=<?= $pass_session_age ?>>
             <input type="text" name="name" id="pass_session_adult" style="display: none;" value=<?= $pass_session_adult ?>>
+            
+            <input type="text" name="name" id="category_to_display" style="display: none;" value=<?= $category_to_display ?>>
         </div>
+        <div class="the_cool_movies">
+            Hottest movies : 
+            <div class="movies_categories_moz">
 
+            </div>
+
+        </div>
     </div>
 </body>
-<footer>
-    <div class="the_footerman">
-        <div class="the_footerman_text">
-            Plus de liens :
-            <a href="https://cultofthepartyparrot.com/">Secret!</a>
-        </div>
-    </div>
-    <div class="the_foot_of_the_footerman">
-        @Mr Con Ure. 
-        @themoviedb.
-    </div>
-    <script src="monscript.js"></script>
-    <script>
-        var article_id = <?php print($_SESSION['loggedin']) ?>
-    </script>
-</footer>
-
-<script type="text/javascript" src="GetPopularMovies.js">
+<script type="text/javascript" src="Hottest_category.js">
 </script>
 
 </html>

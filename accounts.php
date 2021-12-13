@@ -37,7 +37,7 @@ var_dump($_SESSION['logged_in']);
         <a href="disconnect.php">Deconnection</a>
         <a href="accounts.php">Comptes</a>
         <a href="https://cultofthepartyparrot.com/">News</a>
-        <a href="articles.php">Articles</a>
+        <a href="popular.php">Popular</a>
         <a class="active" href="index.php">Accueil</a>
     </div>
     <div class="super_container">
