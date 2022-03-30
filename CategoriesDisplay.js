@@ -3,7 +3,7 @@
 
 
 $(document).ready(function() {
-    let endpoint = 'https://api.themoviedb.org/3/genre/movie/list?api_key=22f118d1998ea34386d70fba4d592724&language=en-US'
+    let endpoint = 'https://api.themoviedb.org/3/genre/movie/list?api_key=API_KEY_HERE&language=en-US'
 
     $.ajax({
         url: endpoint + $(this).text(),
